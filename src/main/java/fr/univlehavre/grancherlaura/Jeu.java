@@ -100,26 +100,6 @@ public class Jeu
 		return gagnant;
 	}
 	
-	public boolean pileValide(int pile)
-	{
-		boolean pileValide=true;
-		
-		if(pile<0 || pile>=listePiles.size())
-			pileValide=false;
-		
-		return pileValide;
-	}
-	
-	public int joueurCourant(int compteur)
-	{
-		int joueurCourant=compteur%2;
-		
-		if(joueurCourant==0)
-			joueurCourant=2;
-		
-		return joueurCourant;
-	}
-	
 	public void jouer()
 	{
 		scanner = new Scanner(System.in);
@@ -133,57 +113,16 @@ public class Jeu
 			// on recupere le joueur à qui c'est le tour
 			tourJoueur=joueurCourant(compteur);
 			
-			int pileDessus=-1;
-			int pileDessous=-1;
-			int nbErreur=0;
-			
 			// on affiche les piles
 			if(pose)
 				System.out.println(this);
 			
 			System.out.println("\n---Joueur "+tourJoueur+"---");
 			
-			// tant que le numero de la pile du dessus n'est pas valide
-			while(!pileValide(pileDessus))
-			{
-				if(nbErreur>0)
-					System.err.print("Mauvais numéro de Pile ! Veuillez taper un nombre entre 1 et " +listePiles.size()+"\nNouvelle pile : \n\n");
-				
-				else
-					System.out.println("Pile à prendre : ");
-				
-				String dessus = scanner.nextLine();
-				
-				try 
-				{
-					pileDessus = Integer.parseInt(dessus)-1;
-				} 
-				
-				catch (NumberFormatException e) 
-				{
-					pileDessus=-1;
-				}
-	
-				nbErreur++;
-			}
+			int pileDessus = getPile(-1);
+			int pileDessous= getPile(pileDessus);
 			
-			nbErreur=0;
-			
-			// tant que le numero de la pile du dessous n'est pas valide
-			while(!pileValide(pileDessous))
-			{
-				if(nbErreur>0)
-					System.err.print("Mauvais numéro de Pile ! Veuillez taper un nombre entre 1 et " +listePiles.size()+"\nNouvelle pile : \n\n");
-				
-				else
-					System.out.println("Poser la pile "+(pileDessus+1)+" sur la pile :");
-				
-				String dessous = scanner.nextLine();
-				pileDessous = Integer.parseInt(dessous)-1;
-				nbErreur++;
-			}
-			
-			// on pose la pile
+			// on pose la pileDessus sur la pileDessous
 			pose = poser(pileDessous, pileDessus);
 			
 			// si on ne peut pas poser la pileDessus sur la pileDessous
@@ -198,7 +137,67 @@ public class Jeu
 				compteur++;
 		}
 		
-		System.out.println(this+"\nBravo joueur : "+tourJoueur);
+		System.out.println(this+"\nBravo joueur "+tourJoueur+" !");
+	}
+	
+	public boolean pileValide(int pile)
+	{
+		boolean pileValide=true;
+		
+		if(pile<0 || pile>=listePiles.size())
+			pileValide=false;
+		
+		return pileValide;
+	}
+	
+	public int getPile(int dessous)
+	{
+		int nbErreur=0;
+		int pile=-1;
+		
+		// tant que la pile n'est pas valide
+		while(!pileValide(pile))
+		{
+			if(nbErreur>0)
+				System.err.print("Mauvais numéro de Pile ! Veuillez taper un nombre entre 1 et " +listePiles.size()+"\nNouvelle pile : \n\n");
+			
+			else
+			{
+				if(dessous==-1)
+					System.out.println("Pile à prendre : ");
+				
+				else
+					System.out.println("Poser la pile "+(dessous+1)+" sur la pile :");
+			}
+				
+			
+			String pileTapee = scanner.nextLine();
+			
+			// on regarde si ce que le joueur a rentré est bien un entier
+			try 
+			{
+				pile = Integer.parseInt(pileTapee)-1;
+			} 
+			
+			catch (NumberFormatException e) 
+			{
+				pile=-1;
+			}
+
+			nbErreur++;
+		}
+		
+		return pile;
+	}
+	
+	public int joueurCourant(int compteur)
+	{
+		int joueurCourant=compteur%2;
+		
+		if(joueurCourant==0)
+			joueurCourant=2;
+		
+		return joueurCourant;
 	}
 	
 	// retourne vrai si on peut encore jouer, faux si le jeu est fini
@@ -260,5 +259,6 @@ public class Jeu
 	public static void main(String args[])
 	{
 		Jeu j = new Jeu("hasard");
+		//Jeu j2 = new Jeu("interactif");
 	}
 }

@@ -190,6 +190,36 @@ public class PileTest
 	}
 	
 	@Test
+	public void equalsTest1() 
+	{
+		Pile p4 = new Pile(VERTE);
+		Pile p5 = new Pile(BEIGE);
+		
+		p4.addPile(p5);
+		p1.addPile(p2);
+		
+		boolean resultatAttendu = true;
+		boolean resultatTrouve = p1.equals(p4);
+		
+		assertEquals(resultatAttendu, resultatTrouve);
+	}
+	
+	@Test
+	public void equalsTest2() 
+	{
+		Pile p4 = new Pile(VERTE);
+		Pile p5 = new Pile(BEIGE);
+		
+		p4.addPile(p5); // VERTE BEIGE
+		p1.addPile(p3); // VERTE ROUGE
+		
+		boolean resultatAttendu = false;
+		boolean resultatTrouve = p1.equals(p4);
+		
+		assertEquals(resultatAttendu, resultatTrouve);
+	}
+	
+	@Test
 	public void toStringTest() 
 	{		
 		String reponseAttendu = "Pile composée de 4 tablettes :\n- BEIGE\n- VERTE\n- NOIRE\n- ROUGE\n";

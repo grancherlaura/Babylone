@@ -72,22 +72,38 @@ public class Pile
 	}
 	
 	@Override
-	public boolean equals(Object p)
+	public int hashCode() 
 	{
-		boolean sontEgaux=true;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((listeTablettes == null) ? 0 : listeTablettes.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) 
+	{
+		if (this == obj)
+			return true;
 		
-		if(this.getHauteur()!=((Pile) p).getHauteur())
+		if (obj == null)
+			return false;
+		
+		if (getClass() != obj.getClass())
+			return false;
+		
+		Pile other = (Pile) obj;
+		
+		if (listeTablettes == null) 
 		{
-			sontEgaux = false;
-		}
+			if (other.listeTablettes != null)
+				return false;
+		} 
 		
-		for(int i=0; i<this.getHauteur()  && sontEgaux==true; i++)
-		{
-			if(!this.get(i).equals(((Pile) p).get(i)))
-				sontEgaux =false;
-		}
+		else if (!listeTablettes.equals(other.listeTablettes))
+			return false;
 		
-		return sontEgaux;
+		return true;
 	}
 	
 	public String toString()
