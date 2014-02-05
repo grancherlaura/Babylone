@@ -5,7 +5,7 @@ public class Pile
 {
 	private ArrayList<Tablette> listeTablettes;
 	
-	public enum Tablette { VERTE, NOIRE, ROUGE, BEIGE};
+	public static enum Tablette { VERTE, NOIRE, ROUGE, BEIGE};
 	
 	public Pile(Tablette tablette)
 	{
@@ -30,24 +30,21 @@ public class Pile
 		
 		return possible;	
 	}
+
+	boolean memeHauteur(Pile autrePile)
+	{
+		return getHauteur() == autrePile.getHauteur();
+	}
+	
+	boolean memeSommet(Pile autrePile) 
+	{
+		return getSommet().equals(autrePile.getSommet());
+	}
 	
 	// retourne vrai s'il est possible de poser la pile p sur la pile courante
 	public boolean peutPoser(Pile p)
 	{
-		boolean possible;
-		
-		// si les deux piles ont la même hauteur ou le même sommet
-		if(this.getHauteur()==p.getHauteur() || this.getSommet().equals(p.getSommet()))
-		{			
-			possible=true;
-		}
-		
-		else
-		{
-			possible=false;
-		}
-		
-		return possible;
+		return memeHauteur(p) || memeSommet(p);
 	}
 	
 	public Tablette getSommet()
@@ -78,37 +75,50 @@ public class Pile
 	public boolean equals(Object obj) 
 	{
 		if (this == obj)
+		{
 			return true;
+		}
 		
 		if (obj == null)
+		{
 			return false;
+		}
 		
 		if (getClass() != obj.getClass())
+		{
 			return false;
+		}
 		
 		Pile other = (Pile) obj;
 		
 		if (listeTablettes == null) 
 		{
 			if (other.listeTablettes != null)
+			{
 				return false;
+			}
 		} 
 		
 		else if (!listeTablettes.equals(other.listeTablettes))
+		{
 			return false;
+		}
 		
 		return true;
 	}
 	
 	public String toString()
 	{
-		String s = "Pile composée de "+getHauteur()+" tablettes :";
+		StringBuilder sb = new StringBuilder("Pile composée de "+getHauteur()+" tablettes :");
 		
 		for(int i=getHauteur()-1; i>=0;i--)
-			s+="\n- "+listeTablettes.get(i);
+		{
+			sb.append("\n- ");
+			sb.append(listeTablettes.get(i));
+		}
 		
-		s+="\n";
+		sb.append("\n");
 		
-		return s;
+		return sb.toString();
 	}
 }

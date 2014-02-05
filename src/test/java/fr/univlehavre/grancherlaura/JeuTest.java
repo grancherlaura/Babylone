@@ -2,6 +2,7 @@ package fr.univlehavre.grancherlaura;
 
 import static org.junit.Assert.*;
 import static fr.univlehavre.grancherlaura.Pile.Tablette.*;
+import static fr.univlehavre.grancherlaura.Jeu.ModeDeJeu.*;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class JeuTest
 	@Before
 	public void setup()
 	{	
-		jeu = new Jeu("rien");
+		jeu = new Jeu(AUCUN);
 	}
 	
 	@Test
@@ -34,7 +35,7 @@ public class JeuTest
 		listeAttendu.add(p2);
 		listeAttendu.add(p3);
 		
-		Jeu j = new Jeu(listeAttendu, "rien");
+		Jeu j = new Jeu(listeAttendu, AUCUN);
 		
 		ArrayList<Pile> listeTrouve = j.getListePile();
 		
@@ -47,24 +48,11 @@ public class JeuTest
 		boolean resultatTrouve = jeu.pileValide(2);
 
 		boolean resultatTrouve2 = jeu.pileValide(-1);
-		boolean resultatTrouve3 = jeu.pileValide(13);
+		boolean resultatTrouve3 = jeu.pileValide(12);
 		
 		assertTrue(resultatTrouve);
 		assertFalse(resultatTrouve2);
 		assertFalse(resultatTrouve3);
-	}
-	
-	@Test
-	public void joueurCourantTest()
-	{
-		int joueurAttendu=1;
-		int joueurTrouve=jeu.joueurCourant(3);
-		
-		int joueurAttendu2=2;
-		int joueurTrouve2=jeu.joueurCourant(4);
-		
-		assertEquals(joueurAttendu, joueurTrouve);	
-		assertEquals(joueurAttendu2, joueurTrouve2);	
 	}
 	
 	@Test
@@ -100,9 +88,9 @@ public class JeuTest
 		listePileAttendu.add(p10);
 		listePileAttendu.add(p12);
 		
-		Jeu jAttendu = new Jeu(listePileAttendu, "rien");
+		Jeu jAttendu = new Jeu(listePileAttendu, AUCUN);
 		
-		Jeu jTrouve = new Jeu("rien");
+		Jeu jTrouve = new Jeu(AUCUN);
 		
 		jTrouve.poser(0,3); // VERT NOIRE, 3 est supprimee
 		jTrouve.poser(9,3); // BEIGE NOIRE, 3 est supprimee
@@ -113,14 +101,13 @@ public class JeuTest
 	
 	@Test
 	public void poserTest2()
-	{		
-		Jeu j = new Jeu("rien");
-		boolean resultatTrouve = j.poser(0,15); // pas de pile à l'emplacement 15
+	{	
+		boolean resultatTrouve = jeu.poser(0,15); // pas de pile à l'emplacement 15
 		
-		boolean resultatTrouve2 = j.poser(-1,3); // pas de pile à l'emplacement -1
+		boolean resultatTrouve2 = jeu.poser(-1,3); // pas de pile à l'emplacement -1
 	
-		j.poser(1,2); // VERTE VERTE
-		boolean resultatTrouve3 = j.poser(1, 8); // BEIGE sur VERTE VERTE
+		jeu.poser(1,2); // VERTE VERTE
+		boolean resultatTrouve3 = jeu.poser(1, 8); // BEIGE sur VERTE VERTE
 		
 		assertFalse(resultatTrouve);	
 		assertFalse(resultatTrouve2);
@@ -140,7 +127,7 @@ public class JeuTest
 		listePile.add(p1);
 		listePile.add(p3);
 		
-		Jeu j = new Jeu(listePile, "rien");
+		Jeu j = new Jeu(listePile, AUCUN);
 		
 		boolean resultatTrouve = j.solution();
 		
@@ -160,7 +147,7 @@ public class JeuTest
 		listePile.add(p1);
 		listePile.add(p3);
 		
-		Jeu j = new Jeu(listePile, "rien");
+		Jeu j = new Jeu(listePile, AUCUN);
 		
 		boolean resultatTrouve = j.solution();
 		
@@ -181,7 +168,7 @@ public class JeuTest
 		listePiles.add(p1);
 		listePiles.add(p2);
 		
-		Jeu j = new Jeu(listePiles, "rien");
+		Jeu j = new Jeu(listePiles, AUCUN);
 		String resultatTrouve = j.toString();
 		
 		assertEquals(resultatAttendu, resultatTrouve);	

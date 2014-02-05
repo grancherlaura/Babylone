@@ -7,13 +7,14 @@ import fr.univlehavre.grancherlaura.Pile.Tablette;
 
 public class Jeu
 {
+	public static enum ModeDeJeu {HASARD, INTERACTIF, AUCUN};
 	private int tourJoueur = 1;
 	private int gagnant=0;
 	private final static int NB_TABLETTES_PAR_COULEUR=3;
 	private ArrayList<Pile> listePiles;
 	private Scanner scanner;
 	
-	public Jeu(String choix)
+	public Jeu(ModeDeJeu choix)
 	{
 		listePiles = new ArrayList<Pile>();
 		
@@ -23,32 +24,37 @@ public class Jeu
 				listePiles.add(new Pile(tablette));
 		}
 		
-		if(choix.equals("hasard"))
+		if(choix.equals(ModeDeJeu.HASARD))
 		{
 			System.out.println("Joueur gagnant :"+this.jouerHasard());
 			System.out.println(this.toString());
 		}
 		
-		else if(choix.equals("interactif"))
+		else if(choix.equals(ModeDeJeu.INTERACTIF))
 		{
 			this.jouer();
 		}
 	}
 	
-	public Jeu(ArrayList<Pile> listePiles, String choix)
+	public Jeu(ArrayList<Pile> listePiles, ModeDeJeu choix)
 	{
 		this.listePiles = listePiles;
 		
-		if(choix.equals("hasard"))
+		if(choix.equals(ModeDeJeu.HASARD))
 		{
 			System.out.println("Joueur gagnant :"+this.jouerHasard());
 			System.out.println(this.toString());
 		}
 		
-		else if(choix.equals("interactif"))
+		else if(choix.equals(ModeDeJeu.INTERACTIF))
 		{
 			this.jouer();
 		}
+	}
+	
+	void changerJoueur() 
+	{
+		tourJoueur = 3 - tourJoueur;
 	}
 	
 	// jeu au hasard
@@ -57,8 +63,8 @@ public class Jeu
 		while(gagnant==0)
 		{				
 			// on tire deux piles qu'on va essayer de poser
-			int pile1 = (int) (Math.random()*listePiles.size());
-			int pile2 = pile1;
+			int pile1=-1;
+			int pile2=-1;
 			boolean pose=false;
 			
 			// tant que l'on ne peut pas jouer, on reessaye avec deux autres piles
@@ -70,103 +76,107 @@ public class Jeu
 				if(pile1!=pile2)
 				{
 					pose=poser(pile1,pile2);
-					
-					if(!pose)
-						pose=poser(pile2,pile1);
 				}
 			}
-			
 			
 			// s'il ne reste plus de solution, le joueur courant a gagne
 			if(!solution())
 			{
 				gagnant=tourJoueur;
-			
 			}
 			
 			// sinon la partie continue !
 			else
 			{
-				// on change de joueur
-				if(tourJoueur==1)
-					tourJoueur=2;
-				
-				else
-					tourJoueur=1;
+				changerJoueur();
 			}
 		}
-		
 		return gagnant;
 	}
 	
 	public void jouer()
 	{
 		scanner = new Scanner(System.in);
-		boolean pose=true;
+		boolean pose=true; 
 		boolean continuer=true;
-		int compteur=1;
+		tourJoueur = 1;
 		
 		// tant que l'on peut continuer la partie
 		while(continuer)
 		{	
-			// on recupere le joueur à qui c'est le tour
-			tourJoueur=joueurCourant(compteur);
-			
 			// on affiche les piles
 			if(pose)
+			{
 				System.out.println(this);
+			}
 			
 			System.out.println("\n---Joueur "+tourJoueur+"---");
 			
-			int pileDessus = getPile(-1);
-			int pileDessous= getPile(pileDessus);
+			int pileDessus = lecturePile(-1);
+			int pileDessous= lecturePile(pileDessus);
 			
 			// on pose la pileDessus sur la pileDessous
 			pose = poser(pileDessous, pileDessus);
 			
 			// si on ne peut pas poser la pileDessus sur la pileDessous
 			if(!pose)
+			{
 				System.err.print("\nImpossible de poser la pile "+(pileDessus+1)+" sur la pile "+(pileDessous+1)+" ! \n\n");
+			}
 			
 			// on verifie s'il reste des solutions
 			continuer=solution();
 			
 			// si l'on a pu pose et que l'on peut continuer, on change de joueur
 			if(pose && continuer)
-				compteur++;
+			{
+				changerJoueur();
+			}
 		}
 		
 		System.out.println(this+"\nBravo joueur "+tourJoueur+" !");
 	}
 	
+	boolean pileInvalide(int pile) 
+	{
+		boolean nombreTropPetit;
+		boolean nombreTropGrand;
+		nombreTropPetit = pile < 0;
+		nombreTropGrand = pile >= listePiles.size();
+		return nombreTropPetit || nombreTropGrand;
+	}
+
 	public boolean pileValide(int pile)
 	{
-		boolean pileValide=true;
-		
-		if(pile<0 || pile>=listePiles.size())
-			pileValide=false;
-		
-		return pileValide;
+		return !pileInvalide(pile);
 	}
 	
-	public int getPile(int dessous)
+	// demande au joueur le numero de la pile jusqu'a ce qu'il soit valide
+	public int lecturePile(int dessus)
 	{
-		int nbErreur=0;
+		boolean erreurSaisie = false;
 		int pile=-1;
 		
 		// tant que la pile n'est pas valide
 		while(!pileValide(pile))
 		{
-			if(nbErreur>0)
+			if(erreurSaisie)
+			{
 				System.err.print("Mauvais numéro de Pile ! Veuillez taper un nombre entre 1 et " +listePiles.size()+"\nNouvelle pile : \n\n");
+			}
 			
 			else
-			{
-				if(dessous==-1)
+			{	// on demande au joueur la pile du dessus
+				if(dessus==-1)
+				{
 					System.out.println("Pile à prendre : ");
+				}
 				
+				// on demande au joueur la pile du dessous
 				else
-					System.out.println("Poser la pile "+(dessous+1)+" sur la pile :");
+				{
+					System.out.println("Poser la pile "+(dessus+1)+" sur la pile :");
+				}
 			}
 				
 			
@@ -180,23 +190,13 @@ public class Jeu
 			
 			catch (NumberFormatException e) 
 			{
-				pile=-1;
+				pile=-1;	
 			}
-
-			nbErreur++;
+			
+			erreurSaisie = true;
 		}
 		
 		return pile;
-	}
-	
-	public int joueurCourant(int compteur)
-	{
-		int joueurCourant=compteur%2;
-		
-		if(joueurCourant==0)
-			joueurCourant=2;
-		
-		return joueurCourant;
 	}
 	
 	// retourne vrai si on peut encore jouer, faux si le jeu est fini
@@ -204,18 +204,15 @@ public class Jeu
 	{
 		boolean solutionExiste=false;
 		
-		for(int pile1=0; pile1<listePiles.size() && !solutionExiste ; pile1++)
+		// on parcourt les piles
+		for(int pile1=0; pile1<listePiles.size()-1 && !solutionExiste ; pile1++)
 		{
-			for(int pile2=0; pile2<listePiles.size() && !solutionExiste ; pile2++)
+			for(int pile2=pile1+1; pile2<listePiles.size() && !solutionExiste ; pile2++)
 			{
-				if(pile1!=pile2)
+				if(listePiles.get(pile1).peutPoser(listePiles.get(pile2)))
 				{
-					if(listePiles.get(pile1).peutPoser(listePiles.get(pile2)) || listePiles.get(pile2).peutPoser(listePiles.get(pile1)))
-					{
-						solutionExiste=true;
-					}	
-				}
-					
+					solutionExiste=true;
+				}	
 			}
 		}
 		
@@ -232,9 +229,13 @@ public class Jeu
 		{
 			possible = listePiles.get(pileDessous).addPile(listePiles.get(pileDessus));
 		
+			// si on a bien ajoute pileDessus sur pileDessous, on supprime pileDessus
 			if(possible)
+			{
 				listePiles.remove(pileDessus);
+			}
 		}	
+		
 		return possible;
 	}
 	
@@ -245,19 +246,21 @@ public class Jeu
 	
 	public String toString()
 	{
-		String s="";
+		StringBuilder sb = new StringBuilder();
 		
 		for(int i=0; i<listePiles.size(); i++)
 		{
-			s+=(i+1)+") " +listePiles.get(i)+"\n";
+			sb.append((i+1)+") ");
+			sb.append(listePiles.get(i));
+			sb.append("\n");
 		}
 		
-		return s;
+		return sb.toString();
 	}
 	
 	public static void main(String args[])
 	{
-		//Jeu j = new Jeu("hasard");
-		Jeu j2 = new Jeu("interactif");
+		//Jeu j = new Jeu(ModeDeJeu.HASARD);
+		Jeu j2 = new Jeu(ModeDeJeu.INTERACTIF);
 	}
 }
