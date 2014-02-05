@@ -25,8 +25,7 @@ public class Pile
 		
 		if(possible)
 		{
-			for(int i=0; i<p.getHauteur(); i++)
-				listeTablettes.add(p.get(i));
+			listeTablettes.addAll(p.getListeTablettes());
 		}
 		
 		return possible;	
@@ -54,11 +53,6 @@ public class Pile
 	public Tablette getSommet()
 	{
 		return listeTablettes.get(listeTablettes.size()-1);
-	}
-	
-	public Tablette get(int index)
-	{
-		return listeTablettes.get(index);
 	}
 	
 	public int getHauteur()
@@ -111,7 +105,7 @@ public class Pile
 		String s = "Pile composée de "+getHauteur()+" tablettes :";
 		
 		for(int i=getHauteur()-1; i>=0;i--)
-			s+="\n- "+get(i);
+			s+="\n- "+listeTablettes.get(i);
 		
 		s+="\n";
 		

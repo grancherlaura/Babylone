@@ -57,29 +57,6 @@ public class PileTest
 	}
 	
 	@Test
-	public void getTest() 
-	{	
-		Tablette tabletteAttendu = VERTE;
-		Tablette tabletteAttendu2 = ROUGE;
-		Tablette tabletteAttendu3 = BEIGE;
-		Tablette tabletteAttendu4 = NOIRE;
-		
-		p1.addPile(p3); // VERTE ROUGE
-		p2.addPile(p4); // BEIGE NOIRE
-		p1.addPile(p2);	// VERTE ROUGE BEIGE NOIRE
-		
-		Tablette tabletteTrouve = p1.get(0);
-		Tablette tabletteTrouve2 = p1.get(1);
-		Tablette tabletteTrouve3 = p1.get(2);
-		Tablette tabletteTrouve4 = p1.get(3);
-				
-		assertEquals(tabletteAttendu, tabletteTrouve);	
-		assertEquals(tabletteAttendu2, tabletteTrouve2);	
-		assertEquals(tabletteAttendu3, tabletteTrouve3);	
-		assertEquals(tabletteAttendu4, tabletteTrouve4);	
-	}
-	
-	@Test
 	public void getHauteur() 
 	{		
 		int hauteurAttendu = 4;
@@ -116,7 +93,6 @@ public class PileTest
 	@Test
 	public void peutPoserTest1() 
 	{		
-		boolean reponseAttendu = true;
 		boolean reponseTrouve = p1.peutPoser(p2); // taille 1 sur taille 1
 			
 		p1.addPile(p2);
@@ -126,17 +102,15 @@ public class PileTest
 		boolean reponseTrouve3 = p3.peutPoser(p4); // sommet NOIR sur sommet NOIR
 		boolean reponseTrouve4 = p1.peutPoser(p3); // taille 2 sur taille 2
 		
-		assertEquals(reponseAttendu, reponseTrouve);	
-		assertEquals(reponseAttendu, reponseTrouve2);
-		assertEquals(reponseAttendu, reponseTrouve3);
-		assertEquals(reponseAttendu, reponseTrouve4);
+		assertTrue(reponseTrouve);	
+		assertTrue(reponseTrouve2);
+		assertTrue(reponseTrouve3);
+		assertTrue(reponseTrouve4);
 	}
 	
 	@Test
 	public void peutPoserTest2() 
-	{		
-		boolean reponseAttendu = false;
-		
+	{				
 		p1.addPile(p2);	// VERTE BEIGE
 		
 		boolean reponseTrouve = p1.peutPoser(p3);  // sommet ROUGE sur sommet BEIGE, tailles 1 sur 2
@@ -146,9 +120,9 @@ public class PileTest
 		boolean reponseTrouve2 = p4.peutPoser(p1);  // sommet BEIGE sur sommet NOIR, tailles 2 sur 1
 		boolean reponseTrouve3 = p3.peutPoser(p2);  // sommet BEIGE sur sommet NOIR, tailles 1 sur 2
 	
-		assertEquals(reponseAttendu, reponseTrouve);
-		assertEquals(reponseAttendu, reponseTrouve2);
-		assertEquals(reponseAttendu, reponseTrouve3);
+		assertFalse(reponseTrouve);
+		assertFalse(reponseTrouve2);
+		assertFalse(reponseTrouve3);
 	}
 	
 	@Test
@@ -182,11 +156,10 @@ public class PileTest
 	@Test
 	public void addPileTest2() 
 	{		
-		boolean reponseAttendu = false;
 		p1.addPile(p2); // 2 tablettes (VERTE et BEIGE) dans la pile
 		boolean reponseTrouve = p1.addPile(p3); // on rajoute la pile contenant la tablette ROUGE
 				
-		assertEquals(reponseAttendu, reponseTrouve);	
+		assertFalse(reponseTrouve);	
 	}
 	
 	@Test
@@ -197,11 +170,10 @@ public class PileTest
 		
 		p4.addPile(p5);
 		p1.addPile(p2);
-		
-		boolean resultatAttendu = true;
+
 		boolean resultatTrouve = p1.equals(p4);
 		
-		assertEquals(resultatAttendu, resultatTrouve);
+		assertTrue(resultatTrouve);
 	}
 	
 	@Test

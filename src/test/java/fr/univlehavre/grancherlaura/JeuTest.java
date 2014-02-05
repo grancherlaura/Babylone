@@ -2,10 +2,9 @@ package fr.univlehavre.grancherlaura;
 
 import static org.junit.Assert.*;
 import static fr.univlehavre.grancherlaura.Pile.Tablette.*;
-import fr.univlehavre.grancherlaura.Pile.Tablette;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 import org.junit.*;
 
@@ -45,16 +44,14 @@ public class JeuTest
 	@Test
 	public void pileValideTest() 
 	{
-		boolean resultatAttendu = true;
 		boolean resultatTrouve = jeu.pileValide(2);
-		
-		boolean resultatAttendu2 = false;
+
 		boolean resultatTrouve2 = jeu.pileValide(-1);
 		boolean resultatTrouve3 = jeu.pileValide(13);
 		
-		assertEquals(resultatAttendu, resultatTrouve);
-		assertEquals(resultatAttendu2, resultatTrouve2);
-		assertEquals(resultatAttendu2, resultatTrouve3);
+		assertTrue(resultatTrouve);
+		assertFalse(resultatTrouve2);
+		assertFalse(resultatTrouve3);
 	}
 	
 	@Test
@@ -116,9 +113,7 @@ public class JeuTest
 	
 	@Test
 	public void poserTest2()
-	{
-		boolean resultatAttendu = false;
-		
+	{		
 		Jeu j = new Jeu("rien");
 		boolean resultatTrouve = j.poser(0,15); // pas de pile à l'emplacement 15
 		
@@ -127,9 +122,9 @@ public class JeuTest
 		j.poser(1,2); // VERTE VERTE
 		boolean resultatTrouve3 = j.poser(1, 8); // BEIGE sur VERTE VERTE
 		
-		assertEquals(resultatAttendu, resultatTrouve);	
-		assertEquals(resultatAttendu, resultatTrouve2);
-		assertEquals(resultatAttendu, resultatTrouve3);
+		assertFalse(resultatTrouve);	
+		assertFalse(resultatTrouve2);
+		assertFalse(resultatTrouve3);
 	}
 	
 	@Test
@@ -147,10 +142,9 @@ public class JeuTest
 		
 		Jeu j = new Jeu(listePile, "rien");
 		
-		boolean resultatAttendu = false;
 		boolean resultatTrouve = j.solution();
 		
-		assertEquals(resultatAttendu, resultatTrouve);		
+		assertFalse(resultatTrouve);		
 	}
 
 	@Test
@@ -168,10 +162,9 @@ public class JeuTest
 		
 		Jeu j = new Jeu(listePile, "rien");
 		
-		boolean resultatAttendu = true;
 		boolean resultatTrouve = j.solution();
 		
-		assertEquals(resultatAttendu, resultatTrouve);		
+		assertTrue(resultatTrouve);		
 	}
 	
 	@Test

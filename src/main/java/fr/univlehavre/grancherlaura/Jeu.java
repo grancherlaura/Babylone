@@ -1,6 +1,5 @@
 package fr.univlehavre.grancherlaura;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -258,7 +257,7 @@ public class Jeu
 	
 	public static void main(String args[])
 	{
-		Jeu j = new Jeu("hasard");
-		//Jeu j2 = new Jeu("interactif");
+		//Jeu j = new Jeu("hasard");
+		Jeu j2 = new Jeu("interactif");
 	}
 }
